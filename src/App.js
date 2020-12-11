@@ -1,13 +1,19 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Home from './app/components/Home/home';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Container from './app/components/Container/container';
 
 function App() {
 
     return (
-        <Switch>
-            <Route path='/' component={Home} />
-        </Switch>
+        <div>
+            <ToastContainer />
+
+            <Switch>
+                <Route path='/' component={Container} />
+            </Switch>
+        </div>
     )
 }
 

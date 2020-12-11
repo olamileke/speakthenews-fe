@@ -1,6 +1,113 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { notifySuccess, notifyError } from '../../services/notify';
 
-function Home() {
+function Home(props) {
+
+    const [url, setUrl] = useState('');
+
+    function addNewUrl() {
+        const re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+        if(!re.test(url)) {
+            notifyError('enter a valid url!');
+            return;
+        }
+
+        if(/https?:\/\/(www\.)?nytimes.com\/.+/.test(url)) {
+            return validateNyTimes(url);
+        }
+        
+        if(/https?:\/\/(www\.)?politico.com\/.+/.test(url)) {
+            return validatePolitico(url);
+        }
+
+        if(/https?:\/\/(www\.)?economist.com\/.+/.test(url)) {
+            return validateEconomist(url);
+        }
+
+        if(/https?:\/\/(www\.)?washingtonpost.com\/.+/.test(url)) {
+            return validateWashingtonPost(url);
+        }
+
+        notifyError('enter a supported url!');
+    }
+
+    // regex validation for nytimes urls
+    const validateNyTimes = url => {
+
+        // regex validation to filter out nytimes live articles
+        if(/https?:\/\/(www\.)?nytimes.com\/live(.*)/.test(url)) {
+            notifyError('nytimes live urls not supported!');
+            return false;
+        }
+
+        // regex validation to filter out nytimes interactive articles
+        if(/https?:\/\/(www\.)?nytimes.com\/interactive(.*)/.test(url)) {
+            notifyError('nytimes interactive urls not supported!');
+            return false;
+        }
+
+        props.addUrl(url);
+        notifySuccess('nytimes url added successfully!');
+        setUrl('');
+        return true;
+    }
+
+    // regex validation for politico articles
+    const validatePolitico = url => {
+
+        // regex validation to filter out politico video links
+        if(/https?:\/\/(www\.)?politico.com\/video(.*)/.test(url)) {
+            notifyError('politico video urls not supported!');
+            return;
+        }
+
+        // regex validation to filter out politico newsletter links
+        if(/https?:\/\/(www\.)?politico.com\/newsletters(.*)/.test(url)) {
+            notifyError('politico newsletter urls not supported!');
+            return;
+        }
+
+        props.addUrl(url);
+        notifySuccess('politico url added successfully!');
+        setUrl('');
+        return true;
+    }
+
+    // regex validation for the economist articles
+    const validateEconomist = url => {
+
+        // regex validation to filter out the economist weekly edition articles
+        if(/https?:\/\/(www\.)?economist.com\/weeklyedition(.*)/.test(url)) {
+            notifyError('economist weekly edition urls not supported!');
+            return;
+        }
+
+        props.addUrl(url);
+        notifySuccess('the economist url added successfully!');
+        setUrl('');
+        return true;
+    }
+
+    // regex validation for washington post articles
+    const validateWashingtonPost = url => {
+
+        // regex validation to filter out washington post video urls
+        if(/https?:\/\/(www\.)?washingtonpost.com\/video(.*)/.test(url)) {
+            notifyError('w.post video urls not supported!');
+            return false;
+        }
+
+        // regex validation to filter out washington post travel urls
+        if(/https?:\/\/(www\.)?washingtonpost.com\/travel(.*)/.test(url)) {
+            notifyError('w.post travel urls not supported!');
+            return false;
+        }
+
+        props.addUrl(url);
+        notifySuccess('w.post url added successfully!');
+        setUrl('');
+        return true;
+    }
 
     return (
         <div style={{ fontFamily:'Quicksand, sans-serif' }}>
@@ -13,8 +120,8 @@ function Home() {
                         <p className='m-0 mb-5 text-lg'>add a news url to your playlist</p>
                         <div className='mr-24 relative'>
                             <i className='absolute mt-5 ml-4 text-black fa fa-link text-lg'></i>
-                            <input type='text' placeholder='https://link-to-your-article' className='focus:outline-none url__input text-black mb-5 p-4 pl-12 font-semibold w-full rounded' style={{ borderRadius:'3px', border:'3px solid yellow' }} autoFocus />
-                            <button className='focus:outline-none add__btn p-4 shadow-lg'>add to playlist</button>
+                            <input type='text' value={url} onChange={e => { setUrl(e.target.value) }} placeholder='https://link-to-your-article' className='focus:outline-none border border-yellow-900 url__input text-black mb-5 p-4 pl-12 font-semibold w-full rounded' style={{ borderRadius:'3px', borderWidth:'3px' }} autoFocus />
+                            <button onClick={addNewUrl} className='focus:outline-none add__btn p-4 shadow-lg'>add to playlist</button>
                         </div>
                     </div>
                 </div>
@@ -56,7 +163,7 @@ function Home() {
             </div>
             <div className='relative w-screen grid grid-cols-12 py-20 text-white font-semibold bg-black'>
                 <div className='col-start-2 col-end-5 flex flex-col z-10'>
-                    <p className='m-0 mb-2 text-2xl' style={{ color:'yellow' }}>speakthenews</p>
+                    <p className='m-0 mb-2 text-2xl text-yellow-900'>speakthenews</p>
                     <p className='m-0 text-lg'>
                         text to speech tool for news articles. providing value by taking advantage of the latest technology.
                         text to speech tool for news articles.

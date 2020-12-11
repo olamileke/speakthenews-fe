@@ -1,4 +1,5 @@
 
+/* styling the placeholder of the add url input on the home page */
 .url__input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
     color: black;
     font-weight:bold;
@@ -28,4 +29,8 @@ font-weight:bold;
 .add__btn:active
 {
     background: #1b1b1b;
+}
+
+.Toastify__toast-body {
+    font-family: "Quicksand", sans-serif !important;
 }
