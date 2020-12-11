@@ -1,0 +1,31 @@
+
+.url__input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: black;
+    font-weight:bold;
+}
+
+.url__input::-moz-placeholder { /* Firefox 19+ */
+color: black;
+font-weight:bold;
+}
+
+.url__input:-ms-input-placeholder { /* IE 10+ */
+color: black;
+font-weight:bold;
+}
+
+.url__input:-moz-placeholder { /* Firefox 18- */
+color: black;
+font-weight:bold;
+}
+
+.add__btn
+{
+    background:#333;
+    border-radius:12px 0 12px 0;
+}
+
+.add__btn:active
+{
+    background: #1b1b1b;
+}
