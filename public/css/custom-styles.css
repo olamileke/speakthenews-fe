@@ -34,3 +34,46 @@ font-weight:bold;
 .Toastify__toast-body {
     font-family: "Quicksand", sans-serif !important;
 }
+
+.z--9999
+{
+    z-index:-9999;
+}
+
+.view__playlist__parent
+{
+    bottom:-104px;
+}
+
+.view__playlist__parent.active
+{
+    bottom:0;
+}
+
+.playlist
+{
+    top:0;
+    left:100vw;
+    width:30vw;
+}
+
+.playlist.active
+{
+    left:70vw;
+}
+
+.playlist::-webkit-scrollbar
+{
+	width:4px;
+	background:rgba(0,0,0,0.05);
+}
+
+.playlist::-webkit-scrollbar-thumb
+{
+	background:rgba(0,0,0,0.25);
+}
+
+.playlist::-webkit-scrollbar-track
+{
+	background:rgba(0,0,0,0.01);
+}

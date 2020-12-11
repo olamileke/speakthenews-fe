@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Home from '../Home/home';
 import Player from '../Player/player';
+import { notifyError } from '../../services/notify';
+
 
 function Container() {
 
@@ -24,8 +26,15 @@ function Container() {
         setUrls(updatedUrls);
     }
 
+    function removeUrl(index) {
+        const updatedUrls = [...urls].reverse();
+        updatedUrls.splice(index, 1);
+        setUrls(updatedUrls);
+        notifyError('url removed from playlist!');
+    }
+
     let componentToDisplay;
-    tabs.home ? componentToDisplay = <Home addUrl={addUrl} /> : componentToDisplay = <Player />;
+    tabs.home ? componentToDisplay = <Home urls={urls} addUrl={addUrl} removeUrl={removeUrl} /> : componentToDisplay = <Player />;
 
     return (
         <div>

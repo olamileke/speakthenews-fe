@@ -4,6 +4,7 @@ import { notifySuccess, notifyError } from '../../services/notify';
 function Home(props) {
 
     const [url, setUrl] = useState('');
+    const [viewPlaylist, setViewPlaylist] = useState(false);
 
     function addNewUrl() {
         const re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -109,15 +110,36 @@ function Home(props) {
         return true;
     }
 
+    function displayUrls() {
+        const urls = [...props.urls].reverse();
+        const urlsData = urls.map((url, index) => {
+            return <div key={index} className='border rounded-md p-3 mb-4 flex flex-col' style={{ borderColor:'rgba(0,0,0,0.06)' }}>
+                <p className='m-0 mb-2 font-semibold break-words'>{url}</p>
+                <p onClick={() => { removeUrl(index) }} className='m-0 text-sm text-gray-600 cursor-pointer' style={{ fontFamily:'Noto Sans TC, sans-serif' }}>remove</p>
+            </div>
+        })
+
+        return urlsData;
+    }
+
+    function removeUrl(index) {
+        if(props.urls.length == 1) {
+            setViewPlaylist(!viewPlaylist);
+        }
+        props.removeUrl(index);
+    }
+
+    const urlsData = displayUrls();
+
     return (
-        <div style={{ fontFamily:'Quicksand, sans-serif' }}>
+        <div className={viewPlaylist ? 'h-screen overflow-y-hidden' : ''} style={{ fontFamily:'Quicksand, sans-serif' }}>
             <div className='relative w-screen grid grid-cols-12' style={{ height:'80vh'}}>
                 <div className='absolute top-0 left-0 ml-10 mt-10 text-white z-20 font-semibold'>speakthenews</div>
                 <img src='/images/home/newspapers.jpg' className='absolute w-full h-full object-cover'alt='background image' />
                 <div className='relative col-start-2 col-span-5 text-white z-20 h-full flex flex-col justify-center' style={{ top:'1vh' }}>
                     <div className='flex flex-col justify-center'>
                         <p className='m-0 mb-4 text-4xl font-semibold' style={{ fontFamily:'Noto Sans TC, sans-serif' }}>LISTEN TO YOUR FAVOURITE ARTICLES TODAY</p>
-                        <p className='m-0 mb-5 text-lg'>add a news url to your playlist</p>
+                        <p className='m-0 mb-5 text-lg'>add a news url to your playlist <i className='ml-1 mt-1 fa fa-headphones'></i></p>
                         <div className='mr-24 relative'>
                             <i className='absolute mt-5 ml-4 text-black fa fa-link text-lg'></i>
                             <input type='text' value={url} onChange={e => { setUrl(e.target.value) }} placeholder='https://link-to-your-article' className='focus:outline-none border border-yellow-900 url__input text-black mb-5 p-4 pl-12 font-semibold w-full rounded' style={{ borderRadius:'3px', borderWidth:'3px' }} autoFocus />
@@ -198,6 +220,29 @@ function Home(props) {
                         <i className='fas fa-envelope mr-3'></i>
                         <p className='m-0 text-lg'><a href='mailto:olamileke.dev@gmail.com'>support@speakthenews.xyz</a></p>
                     </div>
+                </div>
+            </div>
+
+            <div className={props.urls.length > 0 ? 'fixed w-screen transition-all duration-300 ease-in view__playlist__parent active p-6 flex flex-row justify-end bg-white z-30' :
+                'fixed w-screen transition-all duration-300 ease-in view__playlist__parent p-6 flex flex-row justify-end bg-white z-30'} style={{ background:'#FBFBFB' }}>
+                <div className='flex flex-row items-center'>
+                    <button onClick={() => { setViewPlaylist(!viewPlaylist) }} className='focus:outline-none bg-black text-white p-4 mr-5 font-semibold'>View Playlist</button>
+                </div>
+            </div>
+
+            <div onClick={() => { setViewPlaylist(!viewPlaylist) }} className={viewPlaylist && props.urls.length > 0 ? 'fixed left-0 top-0 w-screen h-screen transition-opacity opacity-100 z-30 duration-300 ease-in bg-black' :
+            'fixed left-0 top-0 w-screen h-screen transition-opacity opacity-0 z--9999 duration-300 ease-in'} style={{ background:'rgba(0,0,0,0.8)' }}>
+            </div>
+
+            <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
+            'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
+                <p className='m-0 mb-2 text-lg font-semibold'>playlist ({props.urls.length})</p>
+                <hr className='mb-4'/>
+                <div>
+                    {urlsData}
+                </div>
+                <div className='mb-4'>
+                    <button className='w-full p-5 bg-black text-white font-semibold'>Listen to Playlist <i className='ml-1 mt-1 fa fa-headphones'></i></button>
                 </div>
             </div>
         </div>
