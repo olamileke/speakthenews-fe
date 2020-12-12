@@ -132,50 +132,52 @@ function Home(props) {
     const urlsData = displayUrls();
 
     return (
-        <div className={viewPlaylist ? 'h-screen overflow-y-hidden' : ''} style={{ fontFamily:'Quicksand, sans-serif' }}>
-            <div className='relative w-screen grid grid-cols-12' style={{ height:'80vh'}}>
-                <div className='absolute top-0 left-0 ml-10 mt-10 text-white z-20 font-semibold'>speakthenews</div>
-                <img src='/images/home/newspapers.jpg' className='absolute w-full h-full object-cover'alt='background image' />
-                <div className='relative col-start-2 col-span-5 text-white z-20 h-full flex flex-col justify-center' style={{ top:'1vh' }}>
+        <div className={viewPlaylist ? 'h-screen overflow-y-hidden quicksand' : 'quicksand'}>
+            <div className='initial__content relative w-screen grid grid-cols-12 landing'>
+                <div className='absolute top-0 left-0 ml-6 bsm:ml-8 lg:ml-10 mt-5 bsm:mt-6 lg:mt-8 text-white z-20 font-semibold'>speakthenews</div>
+                <img src='/images/home/newspapers.jpg' className='hidden lg:block absolute w-full h-full object-cover'alt='background image' />
+                <img src='/images/home/headphones.jpg' className='lg:hidden absolute w-full h-full object-cover'alt='background image' />
+                <div className='lg:hidden absolute top-0 left-0 w-full h-full' style={{ background:'rgba(0,0,0,0.75)' }}></div>
+                <div className='relative main col-start-2 col-end-12 md:col-start-2 md:col-span-10 lg:col-start-2 lg:col-span-5 text-white z-20 h-full flex flex-col justify-center'>
                     <div className='flex flex-col justify-center'>
-                        <p className='m-0 mb-4 text-4xl font-semibold' style={{ fontFamily:'Noto Sans TC, sans-serif' }}>LISTEN TO YOUR FAVOURITE ARTICLES TODAY</p>
-                        <p className='m-0 mb-5 text-lg'>add a news url to your playlist <i className='ml-1 mt-1 fa fa-headphones'></i></p>
-                        <div className='mr-24 relative'>
+                        <p className='m-0 mb-2 sm:mb-3 lg:mb-4 text-2xl sm:text-3xl md:text-4xl font-semibold lowercase lg:uppercase header__text'>LISTEN TO YOUR FAVOURITE ARTICLES TODAY</p>
+                        <p className='m-0 mb-3 sm:mb-4 lg:mb-5 text-lg'>add a news url to your playlist <i className='ml-1 mt-1 fa fa-headphones'></i></p>
+                        <div className='lg:mr-24 relative'>
                             <i className='absolute mt-5 ml-4 text-black fa fa-link text-lg'></i>
-                            <input type='text' value={url} onChange={e => { setUrl(e.target.value) }} placeholder='https://link-to-your-article' className='focus:outline-none border border-yellow-900 url__input text-black mb-5 p-4 pl-12 font-semibold w-full rounded' style={{ borderRadius:'3px', borderWidth:'3px' }} autoFocus />
-                            <button onClick={addNewUrl} className='focus:outline-none add__btn p-4 shadow-lg'>add to playlist</button>
+                            <input type='text' value={url} onChange={e => { setUrl(e.target.value) }} placeholder='https://link-to-your-article' className='focus:outline-none border border-yellow-900 url__input text-black mb-3 sm:mb-4 lg:mb-5 p-4 pl-12 font-semibold w-full rounded' style={{ borderRadius:'3px', border:'2px solid #eee' }} autoFocus />
+                            <button onClick={addNewUrl} className='focus:outline-none add__btn bg-lightBlack p-4 shadow-lg'>add to playlist</button>
                         </div>
                     </div>
                 </div>
-                <div className='col-start-7 col-span-5 px-12 z-20' style={{ height:'80vh' }}>
+                <div className='col-start-7 col-span-5 px-12 z-20 hidden lg:block' style={{ height:'80vh' }}>
                     <div className='w-full h-full flex flex-row items-center relative' style={{ top:'8.67%' }}>
                         <img className='w-full h-full object-cover' src='/images/home/headphones.jpg' alt='speakthenews cover image' />
                         <div className='absolute w-full h-full z-10' style={{ background:'rgba(0,0,0,0.2)' }}></div>
                     </div>
                 </div>
             </div>
-            <div className='pt-24 pb-32 px-64 text-center' style={{ background:'#ebebeb' }}>
-                <p className='m-0 mt-12 text-center font-semibold text-xl'>
+            <div className='py-24 lg:pt-24 lg:pb-32 px-12 bsm:px-16 bsm:px-32 lg:px-64 text-center' style={{ background:'#ebebeb' }}>
+                <p className='m-0 lg:mt-12 text-center font-semibold text-xl'>
                     multitask effectively with the speakthenews app. listen to your favourite articles while carrying out your usual
                     daily tasks. it is the ultimate productivity tool that enables you to always stay up to date with happenings
                     in the world while focusing on something else. if you have ever been frustrated at having to drop whatever you
                     were doing simply because you want to focus on an article, then speakthenews is for you.
                 </p>
             </div>
-            <div className='grid grid-cols-12 pb-12'>
-                <div className='col-start-2 col-span-5 pr-16' style={{ height:'80vh' }}>
-                    <div className='w-full h-full flex flex-row items-center relative' style={{ bottom:'8.67%' }}>
+            <div className='grid grid-cols-12 py-24 bsm:py-12 lg:pt-0 lg:pb-8'>
+                <div className='hidden bsm:block col-start-2 col-span-5 lg:pr-16 mid__information'>
+                    <div className='w-full h-full flex flex-row items-center relative'>
                         <img className='w-full h-full object-cover' src='/images/home/read-newspaper.jpg' alt='extra text image' />
                     </div>
                 </div>
-                <div className='col-start-7 pl-12 col-span-5 flex flex-col justify-center'>
-                    <div className='flex flex-col'>
-                        <p className='font-semibold m-0 mb-4 text-3xl'>A New Way to Stay Up to Date</p>
-                        <p className='m-0 text-lg mb-4 text-gray-800 pr-16'>
+                <div className='col-span-12 px-12 bsm:col-start-7 bsm:pl-8 bsm:pr-0 lg:pl-12 bsm:col-span-5 flex flex-col justify-center'>
+                    <div className='flex flex-col items-center bsm:items-start'>
+                        <p className='text-center bsm:text-left font-semibold m-0 mb-4 text-2xl bsm:text-3xl bsm:pl-6 lg:pl-0'>A New Way to Stay Up to Date</p>
+                        <p className='text-center bsm:text-left m-0 text-lg mb-4 text-gray-800 bsm:pl-6 lg:pl-0 lg:pr-16'>
                             dropping everything because you have an article to read is so old school. listening to them is the
                             new school.
                         </p>
-                        <p className='m-0 text-lg text-gray-800 pr-16'>
+                        <p className='text-center bsm:text-left m-0 text-lg text-gray-800 bsm:pl-6 lg:pl-0 lg:pr-16'>
                             speakthenews takes advantage of the latest speech synthesis technology to deliver a wholesome
                             news experience. it is powered by the responsive voice library which leverages unique mechanisms
                             to deliver the news to you.
@@ -183,16 +185,16 @@ function Home(props) {
                     </div>
                 </div>
             </div>
-            <div className='relative w-screen grid grid-cols-12 py-20 text-white font-semibold bg-black'>
-                <div className='col-start-2 col-end-5 flex flex-col z-10'>
-                    <p className='m-0 mb-2 text-2xl text-yellow-900'>speakthenews</p>
+            <div className='p-10 relative w-screen grid grid-cols-12 bsm:py-20 text-white font-semibold bg-black'>
+                <div className='col-span-12 mb-4 bsm:mb-0 bsm:col-start-2 bsm:col-end-5 flex flex-col'>
+                    <p className='m-0 mb-2 bsm:mb-3 text-xl uppercase'>speakthenews</p>
                     <p className='m-0 text-lg'>
                         text to speech tool for news articles. providing value by taking advantage of the latest technology.
-                        text to speech tool for news articles.
+                        <div className='hidden lg:inline'>text to speech tool for news articles.</div>
                     </p>
                 </div>
-                <div className='col-start-6 col-end-9 pl-8 flex flex-col z-10'>
-                    <p className='m-0 mb-2 text-2xl'>supported sites</p>
+                <div className='col-span-12 mb-4 bsm:mb-0 bsm:col-start-5 bsm:pl-10 bmd:pl-16 bsm:col-end-9 lg:col-start-6 lg:pl-4 flex flex-col'>
+                    <p className='m-0 mb-2 bsm:mb-3 uppercase text-xl'>news sites</p>
                     <p className='m-0 mb-1 text-lg'>
                        <a href='https://www.nytimes.com' target='_blank' noreferrer noupgrade>nytimes</a>
                     </p>
@@ -206,8 +208,8 @@ function Home(props) {
                        <a href='https://www.economist.com' target='_blank' noreferrer noupgrade>the economist</a>
                     </p>
                 </div>
-                <div className='col-start-9 col-end-13 pl-6 flex flex-col z-10'>
-                    <p className='m-0 mb-2 text-2xl'>contact</p>
+                <div className='col-span-12 bsm:col-start-9 bsm:col-end-13 bsm:pr-6 lg:pr-0 lg:pl-6 flex flex-col'>
+                    <p className='m-0 mb-2 bsm:mb-3 uppercase text-xl'>contact</p>
                     <div className='flex flex-row items-center mb-3'>
                         <i className='fas fa-map-marker-alt mr-3'></i>
                         <p className='m-0 text-lg'>3, Bisi Awosika Street, Ologolo, Lekki</p>
@@ -216,17 +218,17 @@ function Home(props) {
                         <i className='fas fa-phone-alt mr-3'></i>
                         <p className='m-0 text-lg'>+2348179868840</p>
                     </div>
-                    <div className='flex flex-row items-center'>
+                    <div className='flex flex-row items-center pr-6 break-words'>
                         <i className='fas fa-envelope mr-3'></i>
-                        <p className='m-0 text-lg'><a href='mailto:olamileke.dev@gmail.com'>support@speakthenews.xyz</a></p>
+                        <p className='m-0 text-lg'><a href='mailto:olamileke.dev@gmail.com'>support@stn.xyz</a></p>
                     </div>
                 </div>
             </div>
 
-            <div className={props.urls.length > 0 ? 'fixed w-screen transition-all duration-300 ease-in view__playlist__parent active p-6 flex flex-row justify-end bg-white z-30' :
-                'fixed w-screen transition-all duration-300 ease-in view__playlist__parent p-6 flex flex-row justify-end bg-white z-30'} style={{ background:'#FBFBFB' }}>
+            <div className={props.urls.length > 0 ? 'fixed w-screen transition-all duration-300 ease-in view__playlist__parent active p-4 sm:p-6 flex flex-row justify-end bg-white z-30' :
+                'fixed w-screen transition-all duration-300 ease-in view__playlist__parent p-4 sm:p-6 flex flex-row justify-end bg-white z-30'} style={{ background:'#FBFBFB' }}>
                 <div className='flex flex-row items-center'>
-                    <button onClick={() => { setViewPlaylist(!viewPlaylist) }} className='focus:outline-none bg-black text-white p-4 mr-5 font-semibold'>View Playlist</button>
+                    <button onClick={() => { setViewPlaylist(!viewPlaylist) }} className='focus:outline-none bg-black text-white p-3 sm:p-4 lg:mr-5 font-semibold'>view playlist</button>
                 </div>
             </div>
 
@@ -236,7 +238,10 @@ function Home(props) {
 
             <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
             'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
-                <p className='m-0 mb-2 text-lg font-semibold'>playlist ({props.urls.length})</p>
+                <div className='flex flex-row justify-between items-center'>
+                    <p className='m-0 mb-3 text-lg font-semibold'>playlist ({props.urls.length})</p>
+                    <img onClick={() => { setViewPlaylist(!viewPlaylist) }} src='/images/home/right-arrow.png' className='cursor-pointer object-cover relative' style={{ top:'-2px' }} />
+                </div>
                 <hr className='mb-4'/>
                 <div>
                     {urlsData}

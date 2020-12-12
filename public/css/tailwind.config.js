@@ -6,12 +6,13 @@ module.exports = {
           sm:'576px',
           bsm:'610px',
           md:'769px',
+          bmd:'810px',
           lg:'1025px',
           xl:'1280px'
       },
       extend: {
           colors:{
-            //   darkblue:"#283B42",
+              lightBlack:"#333",
             //   offwhite:"#FBFBFB",
             //   baseGreen:'#335C67'
           },

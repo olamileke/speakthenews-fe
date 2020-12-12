@@ -1,4 +1,44 @@
 
+.initial__content
+{
+    height:80vh;
+}
+
+.initial__content .main
+{
+    top:2vh;
+}
+
+@media(max-width:1025px) 
+{
+    .initial__content
+    {
+        height:60vh;
+    }
+
+    
+    .initial__content .main
+    {
+        top:0;   
+    }
+}
+
+@media(max-width:768px)
+{
+    .initial__content
+    {
+        height:65vh;
+    }
+}
+
+@media(max-width:610px)
+{
+    .initial__content
+    {
+        height:100vh;
+    }
+}
+
 /* styling the placeholder of the add url input on the home page */
 .url__input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
     color: black;
@@ -20,10 +60,17 @@ color: black;
 font-weight:bold;
 }
 
+@media(min-width:1025px)
+{
+    .header__text
+    {
+        font-family:'Noto Sans TC', sans-serif;
+    }
+}
+
 .add__btn
 {
-    background:#333;
-    border-radius:12px 0 12px 0;
+    border-radius:3px;
 }
 
 .add__btn:active
@@ -39,6 +86,46 @@ font-weight:bold;
 {
     z-index:-9999;
 }
+
+.mid__information
+{
+    height:85vh;
+}
+
+.mid__information div
+{
+    bottom:6.67%;
+}
+
+@media(max-width:1025px)
+{
+    .mid__information
+    {
+        height:45vh;
+    }
+
+    .mid__information div
+    {
+        bottom:0;
+    }
+}
+
+@media(max-width:769px)
+{
+    .mid__information
+    {
+        height:55vh;
+    }
+}
+
+@media(max-width:610px)
+{
+    .mid__information
+    {
+        height:45vh;
+    }
+}
+
 
 .view__playlist__parent
 {
@@ -62,6 +149,33 @@ font-weight:bold;
     left:70vw;
 }
 
+
+@media(max-width:1025px)
+{
+    .playlist
+    {
+        width:60vw;
+    }
+
+    .playlist.active
+    {
+        left:40vw;
+    }
+}
+
+@media(max-width:610px)
+{
+    .playlist
+    {
+        width:100vw;
+    }
+
+    .playlist.active
+    {
+        left:0;
+    }
+}
+
 .playlist::-webkit-scrollbar
 {
 	width:4px;
@@ -77,3 +191,4 @@ font-weight:bold;
 {
 	background:rgba(0,0,0,0.01);
 }
+

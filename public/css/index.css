@@ -2,4 +2,14 @@
 
 @tailwind components;
 
+.quicksand
+{
+    font-family:'Quicksand', sans-serif;
+}
+
+.noto
+{
+    font-family:'Noto Sans TC', sans-serif;
+}
+
 @tailwind utilities;
