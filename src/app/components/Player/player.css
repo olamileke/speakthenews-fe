@@ -1,0 +1,11 @@
+  
+  
+.player__playlist::-webkit-scrollbar
+{
+	height:0px;
+}
+
+.controls__default__background
+{
+    background:rgba(0,0,0,0.25);
+}

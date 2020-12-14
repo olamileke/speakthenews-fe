@@ -186,14 +186,14 @@ function Home(props) {
                 </div>
             </div>
             <div className='p-10 relative w-screen grid grid-cols-12 bsm:py-20 text-white font-semibold bg-black'>
-                <div className='col-span-12 mb-4 bsm:mb-0 bsm:col-start-2 bsm:col-end-5 flex flex-col'>
+                <div className='col-span-12 mb-4 bsm:mb-0 bsm:col-start-2 bsm:col-end-5 flex flex-col z-20'>
                     <p className='m-0 mb-2 bsm:mb-3 text-xl uppercase'>speakthenews</p>
                     <p className='m-0 text-lg'>
                         text to speech tool for news articles. providing value by taking advantage of the latest technology.
                         <div className='hidden lg:inline'>text to speech tool for news articles.</div>
                     </p>
                 </div>
-                <div className='col-span-12 mb-4 bsm:mb-0 bsm:col-start-5 bsm:pl-10 bmd:pl-16 bsm:col-end-9 lg:col-start-6 lg:pl-4 flex flex-col'>
+                <div className='z-20 col-span-12 mb-4 bsm:mb-0 bsm:col-start-5 bsm:pl-10 bmd:pl-16 bsm:col-end-9 lg:col-start-6 lg:pl-4 flex flex-col'>
                     <p className='m-0 mb-2 bsm:mb-3 uppercase text-xl'>news sites</p>
                     <p className='m-0 mb-1 text-lg'>
                        <a href='https://www.nytimes.com' target='_blank' noreferrer noupgrade>nytimes</a>
@@ -208,7 +208,7 @@ function Home(props) {
                        <a href='https://www.economist.com' target='_blank' noreferrer noupgrade>the economist</a>
                     </p>
                 </div>
-                <div className='col-span-12 bsm:col-start-9 bsm:col-end-13 bsm:pr-6 lg:pr-0 lg:pl-6 flex flex-col'>
+                <div className='z-20 col-span-12 bsm:col-start-9 bsm:col-end-13 bsm:pr-6 lg:pr-0 lg:pl-6 flex flex-col'>
                     <p className='m-0 mb-2 bsm:mb-3 uppercase text-xl'>contact</p>
                     <div className='flex flex-row items-center mb-3'>
                         <i className='fas fa-map-marker-alt mr-3'></i>
@@ -242,12 +242,16 @@ function Home(props) {
                     <p className='m-0 mb-3 text-lg font-semibold'>playlist ({props.urls.length})</p>
                     <img onClick={() => { setViewPlaylist(!viewPlaylist) }} src='/images/home/right-arrow.png' className='cursor-pointer object-cover relative' style={{ top:'-2px' }} />
                 </div>
-                <hr className='mb-4'/>
+
+                <div>
+                    <hr className='mb-4'/>
+                </div>
+
                 <div>
                     {urlsData}
                 </div>
                 <div className='mb-4'>
-                    <button className='w-full p-5 bg-black text-white font-semibold'>Listen to Playlist <i className='ml-1 mt-1 fa fa-headphones'></i></button>
+                    <button onClick={() => { props.switchTab('player') }} className='focus:outline-none w-full p-5 bg-black text-white font-semibold'>listen to playlist</button>
                 </div>
             </div>
         </div>

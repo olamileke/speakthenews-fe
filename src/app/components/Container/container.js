@@ -6,8 +6,11 @@ import { notifyError } from '../../services/notify';
 
 function Container() {
 
-    const [tabs, setTabs] = useState({ home:true, player:false });
-    const [urls, setUrls] = useState([]);
+    const [tabs, setTabs] = useState({ home:false, player:true });
+    const [urls, setUrls] = useState(['https://www.nytimes.com/2020/12/12/us/politics/republicans-trump-supreme-court-.html?action=click&module=Top%20Stories&pgtype=Homepage',
+    'https://www.nytimes.com/2020/12/13/us/border-crossing-migrants-biden.html?action=click&module=Top%20Stories&pgtype=Homepage',
+    'https://www.nytimes.com/2020/12/13/arts/television/saturday-night-live-fauci.html?action=click&module=Editors%20Picks&pgtype=Homepage',
+    'https://politico.com/news/magazine/2020/12/02/the-us-is-no-longer-a-more-developed-country-than-us-442407']);
 
     function switchTab(tab) {
         let tabs;
@@ -15,7 +18,7 @@ function Container() {
             tabs = { home:true, player:false };
             setTabs(tabs);
         }
-        else if(tabs == 'player') {
+        else if(tab == 'player') {
             tabs = { home:false, player:true }
             setTabs(tabs);
         }
@@ -34,7 +37,7 @@ function Container() {
     }
 
     let componentToDisplay;
-    tabs.home ? componentToDisplay = <Home urls={urls} addUrl={addUrl} removeUrl={removeUrl} /> : componentToDisplay = <Player />;
+    tabs.home ? componentToDisplay = <Home switchTab={switchTab} urls={urls} addUrl={addUrl} removeUrl={removeUrl} /> : componentToDisplay = <Player urls={urls} />;
 
     return (
         <div>
