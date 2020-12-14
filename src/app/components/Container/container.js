@@ -37,7 +37,7 @@ function Container() {
     }
 
     let componentToDisplay;
-    tabs.home ? componentToDisplay = <Home switchTab={switchTab} urls={urls} addUrl={addUrl} removeUrl={removeUrl} /> : componentToDisplay = <Player urls={urls} />;
+    tabs.home ? componentToDisplay = <Home switchTab={switchTab} urls={urls} addUrl={addUrl} removeUrl={removeUrl} /> : componentToDisplay = <Player switchTab={switchTab} urls={urls} />;
 
     return (
         <div>
