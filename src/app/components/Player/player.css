@@ -81,6 +81,14 @@
     transform: rotate(45deg);
 }
 
+@media(max-width:1025px)
+{
+    .article__image__parent
+    {
+        height:60vh;
+    }
+}
+
 .lds-ring {
     display: inline-block;
     position: relative;

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Footer from '../Footer/footer';
 import getText from '../../services/text.js';
 import './player.css';
+import { notifyError, notifySuccess } from '../../services/notify';
 
 function Player(props) {
 
@@ -24,6 +25,8 @@ function Player(props) {
      // function to fetch the contents of an article url
      function fetchUrlText() {
         setFetching(true);
+        screen.width > 1024 ? document.getElementById('playlistTiming').style.width = '0%' 
+        : document.getElementById('playlistTimingSmall').style.width = '0%';
         resetPlaylistTiming();
 
         getText(activeUrl)
@@ -33,6 +36,7 @@ function Player(props) {
             responsiveVoice.speak(article.content);
             setTotalTextArray(responsiveVoice.multipartText);
             totalTextContent = responsiveVoice.multipartText;
+            console.group(responsiveVoice);
             setPlaylistTiming();
             setFetching(false);
         })
@@ -50,17 +54,33 @@ function Player(props) {
     function setPlaylistTiming() {
         playlistTiming = setInterval(() => {
 
-            const currentIndex = totalTextContent.findIndex(text => text == responsiveVoice.currentMsg.text);
+            let currentIndex = totalTextContent.findIndex(text => text == responsiveVoice.currentMsg.text);
+            currentIndex = currentIndex + 1;
 
             if(currentIndex != currentTextIndex) {
                 const percent = String((currentIndex/totalTextContent.length) * 100) + '%';
-                document.getElementById('playlistTiming').style.width = percent;
-                currentTextIndex = currentIndex;            }   
+                screen.width > 1024 ? document.getElementById('playlistTiming').style.width = percent 
+                : document.getElementById('playlistTimingSmall').style.width = percent;
+                currentTextIndex = currentIndex;            
+            }
+            
+            // playing the next article in the playlist when the current one ends
+            if((currentIndex == totalTextContent.length) && !responsiveVoice.isPlaying()) {
+                const urls = [...props.urls];
+                const nextActiveUrlIndex = (urls.findIndex(url => url == activeUrl)) + 1;
+
+                if(nextActiveUrlIndex < urls.length) {
+                    setActiveUrl(urls[nextActiveUrlIndex]);
+                }
+                else {
+                    notifySuccess('end of playlist reached!');
+                }
+                resetPlaylistTiming();
+            }
         }, 1000)
     }
 
     function resetPlaylistTiming() {
-        document.getElementById('playlistTiming').style.width = '0%';
         clearInterval(playlistTiming);
     }
 
@@ -90,7 +110,7 @@ function Player(props) {
 
     function parseArticleTitle() {
         if(nowPlayingArticle.title.length > 70) {
-            return nowPlayingArticle.title.slice(0,68) + '...';
+            return nowPlayingArticle.title.slice(0,63) + '...';
         }
         return nowPlayingArticle.title;
     }
@@ -112,8 +132,8 @@ function Player(props) {
         const markup = urls.map((url, index) => {
             const slicedUrl = url.slice(0, 35) + '...';
 
-            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'font-semibold cursor-pointer flex-shrink-0 rounded-sm mr-3 w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
-            'font-semibold cursor-pointer flex-shrink-0 mr-3 w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
+            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
+            'font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
                 <p className='m-0 break-all'>{slicedUrl}</p>
             </div>
         })
@@ -157,7 +177,7 @@ function Player(props) {
 
     return (
         <div className={ fetching ? 'w-screen h-screen overflow-y-hidden quicksand grid grid-cols-12' : 'w-screen quicksand grid grid-cols-12' } style={{ background:'#FBFBFB' }}>
-            <div className='col-start-2 col-end-12 grid grid-cols-12'>
+            <div className='hidden lg:grid col-start-2 col-end-12 grid grid-cols-12'>
                 <div className='col-span-5 py-12'>
                     <div className='flex flex-col h-full'>
                         <div>
@@ -221,6 +241,63 @@ function Player(props) {
                                 </div>
                                 <div className='invisible'>
                                     speakthenews
+                                </div>
+                                {/* <div className='flex flex-row mt-1 transition-colors duration-300 ease-in'>
+                                    <i className='fa fa-redo mr-6' style={{ transform:'scaleX(-1)' }}></i>
+                                    <i onClick={() => { forwardAndBackwardHandler('backward') }} className='fa fa-backward mr-5 cursor-pointer'></i>
+                                    <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className='fa fa-pause mr-5 cursor-pointer'></i>
+                                    <i onClick={() => { forwardAndBackwardHandler('forward') }} className='fa fa-forward mr-6 cursor-pointer'></i>
+                                    <i className='fa fa-redo mr-6'></i>
+                                </div> */}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className='p-4 bsm:p-8 lg:hidden col-span-12 grid grid-cols-12'>
+                <div className='col-span-12 article__image__parent'>
+                    <div className='relative h-full flex flex-col justify-end'>
+                        <img src={nowPlayingArticle ? nowPlayingArticle.image : '/images/home/headphones.jpg'} className='transition-opacity duration-300 ease-in object-cover w-full h-full opacity-100 z-10' />
+                        <div className='absolute top-0 left-0 w-full h-full z-20' style={{ background:'rgba(0,0,0,0.28)', borderRadius:'4px' }}>
+                            <a href='#' className='text-white font-semibold z-50 relative' onClick={() => { props.switchTab('home') }}
+                            style={{ top:'4%', left:'4%' }}>speakthenews</a>
+                        </div>
+                        
+                        <div className='flex flex-col absolute z-30 px-4 py-8 rounded' style={{ background:'rgba(0,0,0,0.5)', left:'4%', width:'92%', bottom:'20%' }}>
+                            <div className='relative mb-5' style={{ height:'3px' }}>
+                                <div className='top-0 left-0 w-full h-full bg-white'></div>
+                                <div id='playlistTimingSmall' className='transition-all duration-300 ease-in w-0 absolute top-0 left-0 h-full' style={{ background:'rgba(0,0,0,0.5)'}}></div>
+                            </div>
+                            <div className='flex flex-row justify-between text-white'>
+                                <p className='m-0 transition-colors duration-300 ease-in'><b>{nowPlayingArticle ? nowPlayingArticle.title.slice(0,10) + '...' : getNowPlayingBackgroundText()}</b></p>
+                                <div className='flex flex-row mt-1 transition-colors duration-300 ease-in'>
+                                    <i onClick={() => { forwardAndBackwardHandler('backward') }} className='fa fa-backward mr-5 cursor-pointer'></i>
+                                    <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className='fa fa-pause mr-5 cursor-pointer'></i>
+                                    <i onClick={() => { forwardAndBackwardHandler('forward') }} className='fa fa-forward cursor-pointer'></i>
+                                </div>
+                                <div className='invisible'>
+                                    speakthenews
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className='col-span-12 py-10 md:py-16'>
+                    <div className='flex flex-col h-full'>
+                        <div className='px-2 bsm:px-0 flex flex-col justify-center h-full'>
+                            <div className='text-3xl md:text-4xl font-semibold mb-3 noto'>
+                                { nowPlayingArticle ? parseArticleTitle() : '' }
+                            </div>
+                            <div className='mb-4'>
+                                { nowPlayingArticle ? nowPlayingArticle.summary : '' }
+                            </div>
+                            <div className='mb-5'>
+                                { nowPlayingArticle && <a href={activeUrl} target='_blank' className='mr-3 text-md'>read this article here</a> }
+                            </div>
+                            <div className='flex flex-row items-center w-full'>
+                                <div id='player__playlist' className='player__playlist flex flex-row overflow-x-auto mr-auto w-full'>
+                                    {displayPlaylistUrls()}
                                 </div>
                             </div>
                         </div>
