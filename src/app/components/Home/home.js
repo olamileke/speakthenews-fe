@@ -200,7 +200,7 @@ function Home(props) {
             'fixed left-0 top-0 w-screen h-screen transition-opacity opacity-0 z--9999 duration-300 ease-in'} style={{ background:'rgba(0,0,0,0.8)' }}>
             </div>
 
-            <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
+            {/* <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
             'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
                 <div className='flex flex-row justify-between items-center'>
                     <p className='m-0 mb-3 text-lg font-semibold'>playlist ({props.urls.length})</p>
@@ -215,6 +215,20 @@ function Home(props) {
                     {urlsData}
                 </div>
                 <div className='mb-4'>
+                    <button onClick={() => { props.switchTab('player') }} className='focus:outline-none w-full p-5 bg-black text-white font-semibold'>listen to playlist</button>
+                </div>
+            </div> */}
+            <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
+            'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
+                <div className='flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6 mb-8 bsm:mb-8'>
+                    <p className='m-0 mb-3 text-lg font-semibold'>playlist ({props.urls.length})</p>
+                    <img onClick={() => { setViewPlaylist(!viewPlaylist) }} src='/images/home/right-arrow.png' className='cursor-pointer object-cover relative' style={{ top:'-2px' }} />
+                </div>
+
+                <div>
+                    {urlsData}
+                </div>
+                <div className='mb-3'>
                     <button onClick={() => { props.switchTab('player') }} className='focus:outline-none w-full p-5 bg-black text-white font-semibold'>listen to playlist</button>
                 </div>
             </div>

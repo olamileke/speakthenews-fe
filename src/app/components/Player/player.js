@@ -270,7 +270,7 @@ function Player(props) {
                 </div>
             </div>
 
-            <div className='p-4 bsm:p-8 lg:hidden col-span-12 grid grid-cols-12'>
+            <div className='p-4 bsm:p-6 bmd:p-8 lg:hidden col-span-12 grid grid-cols-12'>
                 <div className='col-span-12 article__image__parent'>
                     <div className='relative h-full flex flex-col justify-end'>
                         <img src={nowPlayingArticle ? nowPlayingArticle.image : '/images/home/headphones.jpg'} className='transition-opacity duration-300 ease-in object-cover w-full h-full opacity-100 z-10' />
