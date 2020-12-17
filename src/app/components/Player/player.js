@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Footer from '../Footer/footer';
 import getText from '../../services/text.js';
+import Glide from "@glidejs/glide";
 import './player.css';
 import { notifyError, notifySuccess } from '../../services/notify';
 
@@ -9,6 +10,7 @@ function Player(props) {
     const [activeUrl, setActiveUrl] = useState(props.urls[0]);
     const [viewImage, setViewImage] = useState(false);
     const [nowPlayingArticle, setNowPlayingArticle] = useState(false);
+    const [playing, setPlaying] = useState(false);
     const [totalTextArray, setTotalTextArray] = useState([]);
     const [fetching, setFetching] = useState(false);
 
@@ -21,10 +23,20 @@ function Player(props) {
         return fetchUrlText();
     }, [activeUrl])
 
+    // creating the glide controls for the slide along the playlist
+    useEffect(() => {
+        new Glide(".glide", {
+            peek: 50,
+            perView: 2.5,
+            type: "carousel"
+          }).mount();
+    }, [])
+
     
      // function to fetch the contents of an article url
      function fetchUrlText() {
         setFetching(true);
+        setPlaying(false);
         screen.width > 1024 ? document.getElementById('playlistTiming').style.width = '0%' 
         : document.getElementById('playlistTimingSmall').style.width = '0%';
         resetPlaylistTiming();
@@ -34,6 +46,7 @@ function Player(props) {
             const article = response.data.data;
             setNowPlayingArticle(article);
             responsiveVoice.speak(article.content);
+            setPlaying(true);
             setTotalTextArray(responsiveVoice.multipartText);
             totalTextContent = responsiveVoice.multipartText;
             console.group(responsiveVoice);
@@ -41,7 +54,17 @@ function Player(props) {
             setFetching(false);
         })
         .catch(error => {
-            console.log(error);
+            setFetching(false);
+            notifyError('an error occured');
+            const urls = [...props.urls];
+            const nextActiveUrlIndex = (urls.findIndex(url => url == activeUrl)) + 1;
+
+            if(nextActiveUrlIndex < urls.length) {
+                setActiveUrl(urls[nextActiveUrlIndex]);
+            }
+            else {
+                notifySuccess('end of playlist reached!');
+            }
         })
 
         return () => {
@@ -115,30 +138,23 @@ function Player(props) {
         return nowPlayingArticle.title;
     }
 
-    // scrolling the playlist horizontally
-    function scrollPlaylist(direction) {
-        const playlist = document.getElementById('player__playlist');
-        if(direction == 'left') {
-            playlist.scrollLeft -= 100;
-        }
-        else {
-            playlist.scrollLeft += 100;
-        }
-    }
-
     function displayPlaylistUrls() {
         const urls = [...props.urls];
 
         const markup = urls.map((url, index) => {
             const slicedUrl = url.slice(0, 35) + '...';
 
-            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
-            'font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
+            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-1/4 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
+            'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-1/4 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
                 <p className='m-0 break-all'>{slicedUrl}</p>
             </div>
         })
 
-        return markup;
+        return (
+            <div className='flex flex-row glide__slides'>
+                {markup}
+            </div>
+        )
     }
 
     // function get text to display if user does not want to view article image
@@ -161,18 +177,17 @@ function Player(props) {
     }
 
     function pauseAndPlayHandler() {
-        const pauseAndPlay = document.getElementById('pauseAndPlay');
+        const pauseAndPlay = screen.width > 1024 ? document.getElementById('pauseAndPlay') :
+        document.getElementById('pauseAndPlaySm')
 
         if(pauseAndPlay.classList.contains('fa-pause')) {
-            pauseAndPlay.classList.remove('fa-pause');
-            pauseAndPlay.classList.add('fa-play');
             responsiveVoice.pause();
         }
         else {
-            pauseAndPlay.classList.remove('fa-play');
-            pauseAndPlay.classList.add('fa-pause');
             responsiveVoice.resume();
         }
+
+        setPlaying(!playing);
     }
 
     return (
@@ -193,15 +208,15 @@ function Player(props) {
                             <div className='mb-5'>
                                 { nowPlayingArticle && <a href={activeUrl} target='_blank' className='pl-1 text-md'>read this article <i>here</i></a> }
                             </div>
-                            <div className='flex flex-row mb-4 items-center ml-1 w-full'>
-                                <div className='flex flex-row justify-start items-center' style={{ width:'5%' }}>
-                                    <i onClick={ () => { scrollPlaylist('left') } } className='fa fa-angle-left cursor-pointer text-2xl' style={{ color:'rgba(0,0,0,0.4)' }}></i>
+                            <div className='flex flex-row mb-4 items-center ml-1 w-full glide'>
+                                <div className='flex flex-row justify-start items-center glide__arrows' data-glide-el="controls" style={{ width:'5%' }}>
+                                    <i className='fa fa-angle-left cursor-pointer text-xl glide__arrow glide__arrow--left' data-glide-dir="<" style={{ color:'rgba(0,0,0,0.4)' }}></i>
                                 </div>
-                                <div id='player__playlist' className='player__playlist flex flex-row overflow-x-auto mr-auto' style={{ width:'90%' }}>
+                                <div id='player__playlist' className='player__playlist flex flex-row overflow-x-auto mr-auto glide__track' data-glide-el="track" style={{ width:'90%' }}>
                                     {displayPlaylistUrls()}
                                 </div>
-                                <div className='flex flex-row justify-center items-center'>
-                                    <i onClick={ () => { scrollPlaylist('right') } } className='fa fa-angle-right cursor-pointer text-2xl' style={{ color:'rgba(0,0,0,0.4)' }}></i>
+                                <div className='flex flex-row justify-center items-center glide__arrows' data-glide-el="controls">
+                                    <i className='fa fa-angle-right cursor-pointer text-xl glide__arrow glide__arrow--right' data-glide-dir=">" style={{ color:'rgba(0,0,0,0.4)' }}></i>
                                 </div>
                             </div>
                             <div className='flex flex-row items-center pl-1'>
@@ -236,7 +251,7 @@ function Player(props) {
                                 <p className='m-0 transition-colors duration-300 ease-in'><b>{nowPlayingArticle ? nowPlayingArticle.title.slice(0,10) + '...' : getNowPlayingBackgroundText()}</b></p>
                                 <div className='flex flex-row mt-1 transition-colors duration-300 ease-in'>
                                     <i onClick={() => { forwardAndBackwardHandler('backward') }} className='fa fa-backward mr-5 cursor-pointer'></i>
-                                    <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className='fa fa-pause mr-5 cursor-pointer'></i>
+                                    <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className={ playing ? 'fa fa-pause mr-5 cursor-pointer' : 'fa fa-play mr-5 cursor-pointer' }></i>
                                     <i onClick={() => { forwardAndBackwardHandler('forward') }} className='fa fa-forward cursor-pointer'></i>
                                 </div>
                                 <div className='invisible'>
@@ -273,7 +288,7 @@ function Player(props) {
                                 <p className='m-0 transition-colors duration-300 ease-in'><b>{nowPlayingArticle ? nowPlayingArticle.title.slice(0,10) + '...' : getNowPlayingBackgroundText()}</b></p>
                                 <div className='flex flex-row mt-1 transition-colors duration-300 ease-in'>
                                     <i onClick={() => { forwardAndBackwardHandler('backward') }} className='fa fa-backward mr-5 cursor-pointer'></i>
-                                    <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className='fa fa-pause mr-5 cursor-pointer'></i>
+                                    <i id='pauseAndPlaySm' onClick={ () => { pauseAndPlayHandler() } } className={ playing ? 'fa fa-pause mr-5 cursor-pointer' : 'fa fa-play mr-5 cursor-pointer' }></i>
                                     <i onClick={() => { forwardAndBackwardHandler('forward') }} className='fa fa-forward cursor-pointer'></i>
                                 </div>
                                 <div className='invisible'>
@@ -306,8 +321,8 @@ function Player(props) {
             </div>
             <Footer />
 
-            <div className={ fetching ? 'flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-100 z-50 fixed left-0 top-0 w-screen h-screen' :
-            'flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-0 z--9999 fixed left-0 top-0 w-screen h-screen z-50' } style={{ background:'rgba(0, 0, 0, 0.5)' }}>
+            <div className={ fetching ? 'fetching__parent flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-100 z-50 fixed left-0 top-0 w-screen h-screen' :
+            'fetching__parent flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-0 z--9999 fixed left-0 top-0 w-screen h-screen z-50' }>
                 <div className='flex flex-row items-center justify-center p-4 rounded bg-white'>
                     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>    
                 </div>

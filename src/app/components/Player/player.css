@@ -129,4 +129,16 @@
       transform: rotate(360deg);
     }
 }
-  
+
+.fetching__parent
+{
+    background:rgba(0,0,0,0.5);
+}
+
+@media(max-width:1025px)
+{
+    .fetching__parent
+    {
+        background:rgba(255,255,255,0.5);
+    }
+}  

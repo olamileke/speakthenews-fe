@@ -3,7 +3,7 @@ import React from 'react';
 function Footer() {
     
     return (
-        <div className='col-span-12 p-10 relative w-screen grid grid-cols-12 bsm:py-20 text-white font-semibold bg-black'>
+        <div className='col-span-12 px-8 py-12 relative w-screen grid grid-cols-12 bsm:py-20 text-white font-semibold bg-black'>
             <div className='col-span-12 mb-4 bsm:mb-0 bsm:col-start-2 bsm:col-end-5 flex flex-col z-20'>
                 <p className='m-0 mb-2 bsm:mb-3 text-xl uppercase'>speakthenews</p>
                 <p className='m-0 text-lg'>
