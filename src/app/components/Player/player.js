@@ -13,6 +13,7 @@ function Player(props) {
     const [playing, setPlaying] = useState(false);
     const [totalTextArray, setTotalTextArray] = useState([]);
     const [fetching, setFetching] = useState(false);
+    const [toggleNavigation, setToggleNavigation] = useState(false);
 
     let playlistTiming;
     let currentTextIndex = 0;
@@ -37,7 +38,7 @@ function Player(props) {
      function fetchUrlText() {
         setFetching(true);
         setPlaying(false);
-        screen.width > 1024 ? document.getElementById('playlistTiming').style.width = '0%' 
+        window.screen.width > 1024 ? document.getElementById('playlistTiming').style.width = '0%' 
         : document.getElementById('playlistTimingSmall').style.width = '0%';
         resetPlaylistTiming();
 
@@ -45,11 +46,11 @@ function Player(props) {
         .then(response => {
             const article = response.data.data;
             setNowPlayingArticle(article);
-            responsiveVoice.speak(article.content);
+            window.responsiveVoice.speak(article.content);
             setPlaying(true);
-            setTotalTextArray(responsiveVoice.multipartText);
-            totalTextContent = responsiveVoice.multipartText;
-            console.group(responsiveVoice);
+            setTotalTextArray(window.responsiveVoice.multipartText);
+            totalTextContent = window.responsiveVoice.multipartText;
+            console.group(window.responsiveVoice);
             setPlaylistTiming();
             setFetching(false);
         })
@@ -68,7 +69,7 @@ function Player(props) {
         })
 
         return () => {
-            responsiveVoice.cancel();
+            window.responsiveVoice.cancel();
             resetPlaylistTiming();
         }
     }
@@ -77,18 +78,18 @@ function Player(props) {
     function setPlaylistTiming() {
         playlistTiming = setInterval(() => {
 
-            let currentIndex = totalTextContent.findIndex(text => text == responsiveVoice.currentMsg.text);
+            let currentIndex = totalTextContent.findIndex(text => text == window.responsiveVoice.currentMsg.text);
             currentIndex = currentIndex + 1;
 
             if(currentIndex != currentTextIndex) {
                 const percent = String((currentIndex/totalTextContent.length) * 100) + '%';
-                screen.width > 1024 ? document.getElementById('playlistTiming').style.width = percent 
+                window.screen.width > 1024 ? document.getElementById('playlistTiming').style.width = percent 
                 : document.getElementById('playlistTimingSmall').style.width = percent;
                 currentTextIndex = currentIndex;            
             }
             
             // playing the next article in the playlist when the current one ends
-            if((currentIndex == totalTextContent.length) && !responsiveVoice.isPlaying()) {
+            if((currentIndex == totalTextContent.length) && !window.responsiveVoice.isPlaying()) {
                 const urls = [...props.urls];
                 const nextActiveUrlIndex = (urls.findIndex(url => url == activeUrl)) + 1;
 
@@ -109,10 +110,10 @@ function Player(props) {
 
     // event handler for when the user tries to fast forward or go backwards
     function forwardAndBackwardHandler(direction) {
-        let current = totalTextArray.findIndex(text => text == responsiveVoice.currentMsg.text);
+        let current = totalTextArray.findIndex(text => text == window.responsiveVoice.currentMsg.text);
 
         if(direction == 'forward') {
-            const total = responsiveVoice.utterances.length;
+            const total = window.responsiveVoice.utterances.length;
             if(current < (total - 1)) {
                 current = current + 1;
             }
@@ -128,7 +129,7 @@ function Player(props) {
             return totalText + currentText;
         })
 
-        responsiveVoice.speak(text);
+        window.responsiveVoice.speak(text);
     }
 
     function parseArticleTitle() {
@@ -144,18 +145,33 @@ function Player(props) {
         const markup = urls.map((url, index) => {
             const slicedUrl = url.slice(0, 35) + '...';
 
-            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-1/4 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
-            'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-1/4 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
+            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
+            'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
                 <p className='m-0 break-all'>{slicedUrl}</p>
             </div>
         })
 
         return (
-            <div className='flex flex-row glide__slides'>
+            <div className='flex flex-row glide__slides w-full'>
                 {markup}
             </div>
         )
     }
+
+    // // changing the color of the go-back button 
+    // // as the user is
+    // window.onscroll = () => {
+    //    if(window.pageYOffset > 25) {
+    //        if(!toggleNavigation) {
+    //             setToggleNavigation(true);
+    //        }
+    //     }
+    //    else {
+    //        if(toggleNavigation) {
+    //             setToggleNavigation(false);
+    //        }
+    //    }
+    // }
 
     // function get text to display if user does not want to view article image
     function getNowPlayingBackgroundText() {
@@ -177,21 +193,21 @@ function Player(props) {
     }
 
     function pauseAndPlayHandler() {
-        const pauseAndPlay = screen.width > 1024 ? document.getElementById('pauseAndPlay') :
+        const pauseAndPlay = window.screen.width > 1024 ? document.getElementById('pauseAndPlay') :
         document.getElementById('pauseAndPlaySm')
 
         if(pauseAndPlay.classList.contains('fa-pause')) {
-            responsiveVoice.pause();
+            window.responsiveVoice.pause();
         }
         else {
-            responsiveVoice.resume();
+            window.responsiveVoice.resume();
         }
 
         setPlaying(!playing);
     }
 
     return (
-        <div className={ fetching ? 'w-screen h-screen overflow-y-hidden quicksand grid grid-cols-12' : 'w-screen quicksand grid grid-cols-12' } style={{ background:'#FBFBFB' }}>
+        <div id='container__parent' className={ fetching ? 'w-screen h-screen overflow-y-hidden quicksand grid grid-cols-12' : 'w-screen quicksand grid grid-cols-12' } style={{ background:'#FBFBFB' }}>
             <div className='hidden lg:grid col-start-2 col-end-12 grid grid-cols-12'>
                 <div className='col-span-5 py-12'>
                     <div className='flex flex-col h-full'>
@@ -206,7 +222,7 @@ function Player(props) {
                                 { nowPlayingArticle ? nowPlayingArticle.summary : '' }
                             </div>
                             <div className='mb-5'>
-                                { nowPlayingArticle && <a href={activeUrl} target='_blank' className='pl-1 text-md'>read this article <i>here</i></a> }
+                                { nowPlayingArticle && <p  className='pl-1 text-md'>read this article <a href={activeUrl} target='_blank'>here</a></p> }
                             </div>
                             <div className='flex flex-row mb-4 items-center ml-1 w-full glide'>
                                 <div className='flex flex-row justify-start items-center glide__arrows' data-glide-el="controls" style={{ width:'5%' }}>
@@ -224,14 +240,15 @@ function Player(props) {
                                     <input type='checkbox' checked={viewImage} />
                                     <span className='checkmark'></span>
                                 </div>
-                                <p className='m-0 mt-2 italic'>view image</p>
+                                <p className='m-0 mt-2'>view image</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className='col-span-7 h-screen py-12 pl-24'>
                     <div className='relative h-full flex flex-col justify-end'>
-                        <img src={nowPlayingArticle ? nowPlayingArticle.image : '/images/home/headphones.jpg'} className={ viewImage ? 'transition-opacity duration-300 ease-in object-cover w-full h-full opacity-100 z-10' :
+                        <img src={nowPlayingArticle ? nowPlayingArticle.image : '/images/home/headphones.jpg'} alt={nowPlayingArticle ? nowPlayingArticle.title.slice(0, 30) + '...' : 'speakthenews'}
+                        className={ viewImage ? 'transition-opacity duration-300 ease-in object-cover w-full h-full opacity-100 z-10' :
                        'transition-opacity duration-300 ease-in object-cover w-full h-full opacity-0 z--9999' } style={{ borderRadius:'4px' }} />
                         
                         <div className={ viewImage ? 'absolute top-0 left-0 transition-opacity duration-300 ease-in w-full h-full bg-black flex flex-row opacity-0 z--9999 px-5'
@@ -242,7 +259,7 @@ function Player(props) {
                         <div className={ viewImage ? 'absolute top-0 left-0 w-full h-full z-20' :
                        'absolute top-0 left-0 w-full h-full z-0' } style={{ background:'rgba(0,0,0,0.5)', borderRadius:'4px' }}></div>
                         
-                        <div className='flex flex-col absolute z-30 px-4 py-8 rounded bg-white' style={{ left:'4%', width:'92%', bottom:'20%' }}>
+                        <div className='flex flex-col absolute z-30 px-4 py-8 rounded-sm bg-white' style={{ left:'4%', width:'92%', bottom:'20%' }}>
                             <div className='relative mb-5' style={{ height:'3px' }}>
                                 <div className='top-0 left-0 w-full h-full' style={{ background:'#333' }}></div>
                                 <div id='playlistTiming' className='transition-all duration-300 ease-in w-0 absolute top-0 left-0 h-full bg-white'></div>
@@ -257,23 +274,17 @@ function Player(props) {
                                 <div className='invisible'>
                                     speakthenews
                                 </div>
-                                {/* <div className='flex flex-row mt-1 transition-colors duration-300 ease-in'>
-                                    <i className='fa fa-redo mr-6' style={{ transform:'scaleX(-1)' }}></i>
-                                    <i onClick={() => { forwardAndBackwardHandler('backward') }} className='fa fa-backward mr-5 cursor-pointer'></i>
-                                    <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className='fa fa-pause mr-5 cursor-pointer'></i>
-                                    <i onClick={() => { forwardAndBackwardHandler('forward') }} className='fa fa-forward mr-6 cursor-pointer'></i>
-                                    <i className='fa fa-redo mr-6'></i>
-                                </div> */}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className='p-4 bsm:p-6 bmd:p-8 lg:hidden col-span-12 grid grid-cols-12'>
+            <div id='containerSm' className='p-4 bsm:p-6 bmd:p-8 lg:hidden col-span-12 grid grid-cols-12'>
                 <div className='col-span-12 article__image__parent'>
                     <div className='relative h-full flex flex-col justify-end'>
-                        <img src={nowPlayingArticle ? nowPlayingArticle.image : '/images/home/headphones.jpg'} className='transition-opacity duration-300 ease-in object-cover w-full h-full opacity-100 z-10' />
+                        <img src={nowPlayingArticle ? nowPlayingArticle.image : '/images/home/headphones.jpg'} alt={nowPlayingArticle ? nowPlayingArticle.title.slice(0, 30) + '...' : 'speakthenews'}
+                        className='transition-opacity duration-300 ease-in object-cover w-full h-full opacity-100 z-10' />
                         <div className='absolute top-0 left-0 w-full h-full z-20' style={{ background:'rgba(0,0,0,0.28)', borderRadius:'4px' }}>
                             <a href='#' className='text-white font-semibold z-50 relative' onClick={() => { props.switchTab('home') }}
                             style={{ top:'4%', left:'4%' }}>speakthenews</a>
@@ -284,16 +295,13 @@ function Player(props) {
                                 <div className='top-0 left-0 w-full h-full bg-white'></div>
                                 <div id='playlistTimingSmall' className='transition-all duration-300 ease-in w-0 absolute top-0 left-0 h-full' style={{ background:'rgba(0,0,0,0.5)'}}></div>
                             </div>
-                            <div className='flex flex-row justify-between text-white'>
-                                <p className='m-0 transition-colors duration-300 ease-in'><b>{nowPlayingArticle ? nowPlayingArticle.title.slice(0,10) + '...' : getNowPlayingBackgroundText()}</b></p>
+                            <div className='flex flex-col items-center text-white'>
                                 <div className='flex flex-row mt-1 transition-colors duration-300 ease-in'>
                                     <i onClick={() => { forwardAndBackwardHandler('backward') }} className='fa fa-backward mr-5 cursor-pointer'></i>
                                     <i id='pauseAndPlaySm' onClick={ () => { pauseAndPlayHandler() } } className={ playing ? 'fa fa-pause mr-5 cursor-pointer' : 'fa fa-play mr-5 cursor-pointer' }></i>
                                     <i onClick={() => { forwardAndBackwardHandler('forward') }} className='fa fa-forward cursor-pointer'></i>
                                 </div>
-                                <div className='invisible'>
-                                    speakthenews
-                                </div>
+                                {nowPlayingArticle && <p className='m-0 mt-3 text-center'>{nowPlayingArticle.title.slice(0, 50) + '...'}</p>}
                             </div>
                         </div>
                     </div>
@@ -320,6 +328,10 @@ function Player(props) {
                 </div>
             </div>
             <Footer />
+
+            <div onClick={() => { props.switchTab('home') }} className='fixed bottom-0 right-0 cursor-pointer mb-6 mr-6 bg-black w-12 h-12 rounded-lg flex flex-row justify-center items-center'>
+                <i className='fa fa-reply text-xl text-white' />
+            </div>
 
             <div className={ fetching ? 'fetching__parent flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-100 z-50 fixed left-0 top-0 w-screen h-screen' :
             'fetching__parent flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-0 z--9999 fixed left-0 top-0 w-screen h-screen z-50' }>

@@ -136,8 +136,8 @@ function Home(props) {
         <div className={viewPlaylist ? 'h-screen overflow-y-hidden quicksand' : 'quicksand'}>
             <div className='initial__content relative w-screen grid grid-cols-12 landing'>
                 <div className='absolute top-0 left-0 ml-6 bsm:ml-8 lg:ml-10 mt-5 bsm:mt-6 lg:mt-8 text-white z-20 font-semibold'>speakthenews</div>
-                <img src='/images/home/newspapers.jpg' className='hidden lg:block absolute w-full h-full object-cover'alt='background image' />
-                <img src='/images/home/headphones.jpg' className='lg:hidden absolute w-full h-full object-cover'alt='background image' />
+                <img src='/images/home/newspapers.jpg' className='hidden lg:block absolute w-full h-full object-cover'alt='background' />
+                <img src='/images/home/headphones.jpg' className='lg:hidden absolute w-full h-full object-cover'alt='background' />
                 <div className='lg:hidden absolute top-0 left-0 w-full h-full' style={{ background:'rgba(0,0,0,0.75)' }}></div>
                 <div className='relative main col-start-2 col-end-12 md:col-start-2 md:col-span-10 lg:col-start-2 lg:col-span-5 text-white z-20 h-full flex flex-col justify-center'>
                     <div className='flex flex-col justify-center'>
@@ -157,8 +157,8 @@ function Home(props) {
                     </div>
                 </div>
             </div>
-            <div className='py-24 lg:pt-24 lg:pb-32 px-12 bsm:px-16 bsm:px-32 lg:px-64 text-center' style={{ background:'#ebebeb' }}>
-                <p className='m-0 lg:mt-12 text-center font-semibold text-xl'>
+            <div className='py-24 lg:pt-24 lg:pb-32 px-10 bxs:px-12 bsm:px-16 bsm:px-32 lg:px-64 text-center' style={{ background:'#ebebeb' }}>
+                <p className='m-0 lg:mt-12 text-center font-semibold text-lg bsm:text-xl'>
                     multitask effectively with the speakthenews app. listen to your favourite articles while carrying out your usual
                     daily tasks. it is the ultimate productivity tool that enables you to always stay up to date with happenings
                     in the world while focusing on something else. if you have ever been frustrated at having to drop whatever you
@@ -168,12 +168,12 @@ function Home(props) {
             <div className='grid grid-cols-12 py-24 bsm:py-12 lg:pt-0 lg:pb-8'>
                 <div className='hidden bsm:block col-start-2 col-span-5 lg:pr-16 mid__information'>
                     <div className='w-full h-full flex flex-row items-center relative'>
-                        <img className='w-full h-full object-cover' src='/images/home/read-newspaper.jpg' alt='extra text image' />
+                        <img className='w-full h-full object-cover' src='/images/home/read-newspaper.jpg' alt='description' />
                     </div>
                 </div>
                 <div className='col-span-12 px-12 bsm:col-start-7 bsm:pl-8 bsm:pr-0 lg:pl-12 bsm:col-span-5 flex flex-col justify-center'>
                     <div className='flex flex-col items-center bsm:items-start'>
-                        <p className='text-center bsm:text-left font-semibold m-0 mb-4 text-2xl bsm:text-3xl bsm:pl-6 lg:pl-0'>A New Way to Stay Up to Date</p>
+                        <p className='text-center bsm:text-left font-semibold m-0 mb-4 text-xl sm:text-2xl bsm:text-3xl bsm:pl-6 lg:pl-0'>A New Way to Stay Up to Date</p>
                         <p className='text-center bsm:text-left m-0 text-lg mb-4 text-gray-800 bsm:pl-6 lg:pl-0 lg:pr-16'>
                             dropping everything because you have an article to read is so old school. listening to them is the
                             new school.
@@ -200,24 +200,6 @@ function Home(props) {
             'fixed left-0 top-0 w-screen h-screen transition-opacity opacity-0 z--9999 duration-300 ease-in'} style={{ background:'rgba(0,0,0,0.8)' }}>
             </div>
 
-            {/* <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
-            'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
-                <div className='flex flex-row justify-between items-center'>
-                    <p className='m-0 mb-3 text-lg font-semibold'>playlist ({props.urls.length})</p>
-                    <img onClick={() => { setViewPlaylist(!viewPlaylist) }} src='/images/home/right-arrow.png' className='cursor-pointer object-cover relative' style={{ top:'-2px' }} />
-                </div>
-
-                <div>
-                    <hr className='mb-4'/>
-                </div>
-
-                <div>
-                    {urlsData}
-                </div>
-                <div className='mb-4'>
-                    <button onClick={() => { props.switchTab('player') }} className='focus:outline-none w-full p-5 bg-black text-white font-semibold'>listen to playlist</button>
-                </div>
-            </div> */}
             <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
             'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
                 <div className='flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6 mb-8 bsm:mb-8'>
