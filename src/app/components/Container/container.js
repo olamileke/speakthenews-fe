@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Home from '../Home/home';
 import Player from '../Player/player';
-import { notifyError } from '../../services/notify';
+import { notifySuccess } from '../../services/notify';
 
 
 function Container() {
@@ -30,7 +30,7 @@ function Container() {
         const updatedUrls = [...urls].reverse();
         updatedUrls.splice(index, 1);
         setUrls(updatedUrls);
-        notifyError('url removed from playlist!');
+        notifySuccess('url removed from playlist!');
     }
 
     let componentToDisplay;
