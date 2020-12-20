@@ -25,11 +25,13 @@ function Player(props) {
 
     // creating the glide controls for the slide along the playlist
     useEffect(() => {
-        new Glide(".glide", {
-            peek: 50,
-            perView: 2.5,
-            type: "carousel"
-          }).mount();
+        if(window.screen.width > 1024 && props.urls.length > 3) {
+            new Glide(".glide", {
+                peek: 50,
+                perView: 2.5,
+                type: "carousel"
+              }).mount();
+        }
     }, []);
 
     // checking if the user is accessing the application via chrome
@@ -41,19 +43,20 @@ function Player(props) {
      // function to fetch the contents of an article url
      function fetchUrlText() {
         setFetching(true);
+        setPlaying(false);
         
         if(isChrome()) {
             window.screen.width > 1024 ? document.getElementById('playlistTiming').style.width = '0%' 
             : document.getElementById('playlistTimingSmall').style.width = '0%';
             resetPlaylistTiming();
-            setPlaying(false);
         }
 
         getText(activeUrl)
         .then(response => {
             const article = response.data.data;
             setNowPlayingArticle(article);
-            window.responsiveVoice.speak(article.content);
+            const content = `Title - ${article.title}. ` + article.content;
+            window.responsiveVoice.speak(content);
             
             if(isChrome()) {
                 setPlaying(true);
@@ -62,7 +65,6 @@ function Player(props) {
                 setPlaylistTiming();    
             }
             
-            console.log(window.responsiveVoice);
             setFetching(false);
         })
         .catch(error => {
@@ -230,15 +232,15 @@ function Player(props) {
                                 { nowPlayingArticle && <p  className='pl-1 text-md'>read this article <a href={activeUrl} target='_blank' noopener="true" noreferrer="true">here</a></p> }
                             </div>
                             <div className='flex flex-row mb-4 items-center ml-1 w-full glide'>
-                                <div className='flex flex-row justify-start items-center glide__arrows' data-glide-el="controls" style={{ width:'5%' }}>
+                                {props.urls.length > 3 && <div className='flex flex-row justify-start items-center glide__arrows' data-glide-el="controls" style={{ width:'5%' }}>
                                     <i className='fa fa-angle-left cursor-pointer text-xl glide__arrow glide__arrow--left' data-glide-dir="<" style={{ color:'rgba(0,0,0,0.4)' }}></i>
-                                </div>
+                                </div>}
                                 <div id='player__playlist' className='player__playlist flex flex-row overflow-x-auto mr-auto glide__track' data-glide-el="track" style={{ width:'90%' }}>
                                     {displayPlaylistUrls()}
                                 </div>
-                                <div className='flex flex-row justify-center items-center glide__arrows' data-glide-el="controls">
+                                {props.urls.length > 3 && <div className='flex flex-row justify-center items-center glide__arrows' data-glide-el="controls">
                                     <i className='fa fa-angle-right cursor-pointer text-xl glide__arrow glide__arrow--right' data-glide-dir=">" style={{ color:'rgba(0,0,0,0.4)' }}></i>
-                                </div>
+                                </div>}
                             </div>
                             <div className='flex flex-row items-center pl-1'>
                                 <div className='check__container' onClick={() => { setViewImage(!viewImage) }}>

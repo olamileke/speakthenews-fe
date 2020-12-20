@@ -21,6 +21,11 @@ function Home(props) {
             return;
         }
 
+        if(props.urls.indexOf(url) != -1) {
+            notifyError('url is already in playlist!');
+            return;
+        }
+
         if(/https?:\/\/(www\.)?nytimes.com\/.+/.test(url)) {
             return validateNyTimes(url);
         }
@@ -209,13 +214,12 @@ function Home(props) {
 
             <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
             'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
-                <div className={isFirefox ? 'flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6 mb-5' 
-                : 'flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6 mb-8' }>
+                <div className='flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6'>
                     <p className='m-0 mb-3 text-lg firefox__font font-semibold'>playlist ({props.urls.length})</p>
                     <img onClick={() => { setViewPlaylist(!viewPlaylist) }} src='/images/home/right-arrow.png' className='cursor-pointer object-cover relative' style={{ top:'-2px' }} />
                 </div>
 
-                <div>
+                <div className={ isFirefox ? 'mt-5' : 'mt-8' }>
                     {urlsData}
                 </div>
                 <div>

@@ -13,6 +13,9 @@ ReactDom.render(
 // registering the service worker for pwas
 serviceWorker.register();
 
+
+// integrating the screen lock api to prevent
+// the app from sleeping on mobile
 let wakeLock = null;
 
 const requestWakeLock = async () => {
