@@ -13,7 +13,6 @@ function Player(props) {
     const [playing, setPlaying] = useState(false);
     const [totalTextArray, setTotalTextArray] = useState([]);
     const [fetching, setFetching] = useState(false);
-    const [toggleNavigation, setToggleNavigation] = useState(false);
 
     let playlistTiming;
     let currentTextIndex = 0;
@@ -31,27 +30,39 @@ function Player(props) {
             perView: 2.5,
             type: "carousel"
           }).mount();
-    }, [])
+    }, []);
 
+    // checking if the user is accessing the application via chrome
+    function isChrome() {
+        let isChrome = navigator.userAgent.includes('Firefox') || navigator.userAgent.includes('Edg') ? false : true;
+        return isChrome;
+    }
     
      // function to fetch the contents of an article url
      function fetchUrlText() {
         setFetching(true);
-        setPlaying(false);
-        window.screen.width > 1024 ? document.getElementById('playlistTiming').style.width = '0%' 
-        : document.getElementById('playlistTimingSmall').style.width = '0%';
-        resetPlaylistTiming();
+        
+        if(isChrome()) {
+            window.screen.width > 1024 ? document.getElementById('playlistTiming').style.width = '0%' 
+            : document.getElementById('playlistTimingSmall').style.width = '0%';
+            resetPlaylistTiming();
+            setPlaying(false);
+        }
 
         getText(activeUrl)
         .then(response => {
             const article = response.data.data;
             setNowPlayingArticle(article);
             window.responsiveVoice.speak(article.content);
-            setPlaying(true);
-            setTotalTextArray(window.responsiveVoice.multipartText);
-            totalTextContent = window.responsiveVoice.multipartText;
-            console.group(window.responsiveVoice);
-            setPlaylistTiming();
+            
+            if(isChrome()) {
+                setPlaying(true);
+                setTotalTextArray(window.responsiveVoice.multipartText);
+                totalTextContent = window.responsiveVoice.multipartText;
+                setPlaylistTiming();    
+            }
+            
+            console.log(window.responsiveVoice);
             setFetching(false);
         })
         .catch(error => {
@@ -139,14 +150,32 @@ function Player(props) {
         return nowPlayingArticle.title;
     }
 
+    function getNewsSite() {
+        if(activeUrl.includes('nytimes')) {
+            return 'The New York Times';
+        }
+
+        if(activeUrl.includes('washingtonpost')) {
+            return 'The Washington Post';
+        }
+
+        if(activeUrl.includes('economist')) {
+            return 'The Economist';
+        }
+
+        if(activeUrl.includes('politico')) {
+            return 'Politico';
+        }
+    }
+
     function displayPlaylistUrls() {
         const urls = [...props.urls];
 
         const markup = urls.map((url, index) => {
             const slicedUrl = url.slice(0, 35) + '...';
 
-            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
-            'glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
+            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'firefox__font glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
+            'firefox__font glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
                 <p className='m-0 break-all'>{slicedUrl}</p>
             </div>
         })
@@ -158,38 +187,14 @@ function Player(props) {
         )
     }
 
-    // // changing the color of the go-back button 
-    // // as the user is
-    // window.onscroll = () => {
-    //    if(window.pageYOffset > 25) {
-    //        if(!toggleNavigation) {
-    //             setToggleNavigation(true);
-    //        }
-    //     }
-    //    else {
-    //        if(toggleNavigation) {
-    //             setToggleNavigation(false);
-    //        }
-    //    }
-    // }
-
     // function get text to display if user does not want to view article image
     function getNowPlayingBackgroundText() {
-        if(activeUrl.includes('nytimes')) {
-            return 'The New York Times';
+
+        if(!nowPlayingArticle) {
+            return 'speakthenews';
         }
 
-        if(activeUrl.includes('politico')) {
-            return 'Politico';
-        }
-
-        if(activeUrl.includes('economist')) {
-            return 'The Economist';
-        }
-
-        if(activeUrl.includes('washingtonpost')) {
-            return 'The Washington Post';
-        }
+        return nowPlayingArticle.title.slice(0, 30) + '...';
     }
 
     function pauseAndPlayHandler() {
@@ -207,7 +212,7 @@ function Player(props) {
     }
 
     return (
-        <div id='container__parent' className={ fetching ? 'w-screen h-screen overflow-y-hidden quicksand grid grid-cols-12' : 'w-screen quicksand grid grid-cols-12' } style={{ background:'#FBFBFB' }}>
+        <div className={ fetching ? 'w-screen h-screen overflow-y-hidden quicksand grid grid-cols-12' : 'w-screen quicksand grid grid-cols-12' } style={{ background:'#FBFBFB' }}>
             <div className='hidden lg:grid col-start-2 col-end-12 grid grid-cols-12'>
                 <div className='col-span-5 py-12'>
                     <div className='flex flex-col h-full'>
@@ -222,7 +227,7 @@ function Player(props) {
                                 { nowPlayingArticle ? nowPlayingArticle.summary : '' }
                             </div>
                             <div className='mb-5'>
-                                { nowPlayingArticle && <p  className='pl-1 text-md'>read this article <a href={activeUrl} target='_blank'>here</a></p> }
+                                { nowPlayingArticle && <p  className='pl-1 text-md'>read this article <a href={activeUrl} target='_blank' noopener="true" noreferrer="true">here</a></p> }
                             </div>
                             <div className='flex flex-row mb-4 items-center ml-1 w-full glide'>
                                 <div className='flex flex-row justify-start items-center glide__arrows' data-glide-el="controls" style={{ width:'5%' }}>
@@ -259,28 +264,30 @@ function Player(props) {
                         <div className={ viewImage ? 'absolute top-0 left-0 w-full h-full z-20' :
                        'absolute top-0 left-0 w-full h-full z-0' } style={{ background:'rgba(0,0,0,0.5)', borderRadius:'4px' }}></div>
                         
-                        <div className='flex flex-col absolute z-30 px-4 py-8 rounded-sm bg-white' style={{ left:'4%', width:'92%', bottom:'20%' }}>
+                        {isChrome() && <div className='flex flex-col absolute z-30 px-4 py-8 rounded-lg w-full' style={{ background:'#FBFBFB', borderRadius:'18px 18px 0 0' }}>
                             <div className='relative mb-5' style={{ height:'3px' }}>
-                                <div className='top-0 left-0 w-full h-full' style={{ background:'#333' }}></div>
-                                <div id='playlistTiming' className='transition-all duration-300 ease-in w-0 absolute top-0 left-0 h-full bg-white'></div>
+                                <div className='top-0 left-0 w-full h-full bg-black'></div>
+                                <div id='playlistTiming' className='transition-all duration-300 ease-in w-0 absolute top-0 left-0 h-full' style={{ background:'#FBFBFB' }}></div>
                             </div>
-                            <div className='flex flex-row justify-between text-black'>
-                                <p className='m-0 transition-colors duration-300 ease-in'><b>{nowPlayingArticle ? nowPlayingArticle.title.slice(0,10) + '...' : getNowPlayingBackgroundText()}</b></p>
-                                <div className='flex flex-row mt-1 transition-colors duration-300 ease-in'>
+                            <div className='flex flex-col w-full items-center mb-3'>
+                                <p className='m-0 mb-1 text-lg'>{ getNewsSite() }</p>
+                                {nowPlayingArticle && <p className='m-0'>{nowPlayingArticle.summary.slice(0,50) + '...'}</p>}
+                            </div>
+                            <div className='flex flex-row justify-center text-black relative' style={{ top:'2px' }}>
+                                <div className='flex flex-row items-center transition-colors duration-300 ease-in'>
                                     <i onClick={() => { forwardAndBackwardHandler('backward') }} className='fa fa-backward mr-5 cursor-pointer'></i>
-                                    <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className={ playing ? 'fa fa-pause mr-5 cursor-pointer' : 'fa fa-play mr-5 cursor-pointer' }></i>
+                                    <div className='w-12 h-12 flex flex-row justify-center items-center mr-5 border border-black rounded-full'> 
+                                        <i id='pauseAndPlay' onClick={ () => { pauseAndPlayHandler() } } className={ playing ? 'fa fa-pause cursor-pointer' : 'fa fa-play cursor-pointer' }></i>
+                                    </div>
                                     <i onClick={() => { forwardAndBackwardHandler('forward') }} className='fa fa-forward cursor-pointer'></i>
                                 </div>
-                                <div className='invisible'>
-                                    speakthenews
-                                </div>
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>
 
-            <div id='containerSm' className='p-4 bsm:p-6 bmd:p-8 lg:hidden col-span-12 grid grid-cols-12'>
+            <div className='p-4 bsm:p-6 bmd:p-8 lg:hidden col-span-12 grid grid-cols-12'>
                 <div className='col-span-12 article__image__parent'>
                     <div className='relative h-full flex flex-col justify-end'>
                         <img src={nowPlayingArticle ? nowPlayingArticle.image : '/images/home/headphones.jpg'} alt={nowPlayingArticle ? nowPlayingArticle.title.slice(0, 30) + '...' : 'speakthenews'}
@@ -290,7 +297,7 @@ function Player(props) {
                             style={{ top:'4%', left:'4%' }}>speakthenews</a>
                         </div>
                         
-                        <div className='flex flex-col absolute z-30 px-4 py-8 rounded' style={{ background:'rgba(0,0,0,0.5)', left:'4%', width:'92%', bottom:'20%' }}>
+                        {isChrome() && <div className='flex flex-col absolute z-30 px-4 py-8 rounded' style={{ background:'rgba(0,0,0,0.5)', left:'4%', width:'92%', bottom:'20%' }}>
                             <div className='relative mb-5' style={{ height:'3px' }}>
                                 <div className='top-0 left-0 w-full h-full bg-white'></div>
                                 <div id='playlistTimingSmall' className='transition-all duration-300 ease-in w-0 absolute top-0 left-0 h-full' style={{ background:'rgba(0,0,0,0.5)'}}></div>
@@ -303,7 +310,7 @@ function Player(props) {
                                 </div>
                                 {nowPlayingArticle && <p className='m-0 mt-3 text-center'>{nowPlayingArticle.title.slice(0, 50) + '...'}</p>}
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 </div>
                 <div className='col-span-12 py-10 md:py-16'>
@@ -316,7 +323,7 @@ function Player(props) {
                                 { nowPlayingArticle ? nowPlayingArticle.summary : '' }
                             </div>
                             <div className='mb-5'>
-                                { nowPlayingArticle && <a href={activeUrl} target='_blank' className='mr-3 text-md'>read this article here</a> }
+                                { nowPlayingArticle && <a href={activeUrl} target='_blank' noopener="true" noreferrer="true" className='mr-3 text-md'>read this article here</a> }
                             </div>
                             <div className='flex flex-row items-center w-full'>
                                 <div id='player__playlist' className='player__playlist flex flex-row overflow-x-auto mr-auto w-full'>
@@ -336,7 +343,7 @@ function Player(props) {
             <div className={ fetching ? 'fetching__parent flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-100 z-50 fixed left-0 top-0 w-screen h-screen' :
             'fetching__parent flex flex-row justify-center items-center transition-opacity duration-300 ease-in opacity-0 z--9999 fixed left-0 top-0 w-screen h-screen z-50' }>
                 <div className='flex flex-row items-center justify-center p-4 rounded bg-white'>
-                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>    
+                    <div className="lds-ring"><div></div><div></div><div></div><div></div></div>    
                 </div>
             </div>
         </div>

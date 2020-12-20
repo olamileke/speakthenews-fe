@@ -1,4 +1,19 @@
 
+body
+{
+    overscroll-behavior-y: contain;
+}
+
+
+@-moz-document url-prefix()
+{
+    .firefox__font
+    {
+        font-weight:normal;
+    }
+}
+
+
 .initial__content
 {
     height:80vh;

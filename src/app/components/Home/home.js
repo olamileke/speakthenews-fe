@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '../Footer/footer';
 import { notifySuccess, notifyError } from '../../services/notify';
 
@@ -6,6 +6,13 @@ function Home(props) {
 
     const [url, setUrl] = useState('');
     const [viewPlaylist, setViewPlaylist] = useState(false);
+    const [isFirefox, setIsFirefox] = useState(false);
+
+    // checking if the user is accessing the application via Firefox
+    useEffect(() => {
+        const isFirefox = navigator.userAgent.includes('Firefox') ? true : false;
+        setIsFirefox(isFirefox);
+    }, [])
 
     function addNewUrl() {
         const re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -114,9 +121,9 @@ function Home(props) {
     function displayUrls() {
         const urls = [...props.urls].reverse();
         const urlsData = urls.map((url, index) => {
-            return <div key={index} className='border rounded-md p-3 mb-4 flex flex-col' style={{ borderColor:'rgba(0,0,0,0.06)' }}>
-                <p className='m-0 mb-2 font-semibold break-words'>{url}</p>
-                <p onClick={() => { removeUrl(index) }} className='m-0 text-sm text-gray-600 cursor-pointer' style={{ fontFamily:'Noto Sans TC, sans-serif' }}>remove</p>
+            return <div key={index} className='border p-3 mb-4 flex flex-col' style={{ borderColor:'rgba(0,0,0,0.06)' }}>
+                <p className='m-0 mb-2 firefox__font font-semibold break-words'>{url}</p>
+                <p onClick={() => { removeUrl(index) }} className='m-0 text-sm text-gray-600 cursor-pointer'>remove</p>
             </div>
         })
 
@@ -135,7 +142,7 @@ function Home(props) {
     return (
         <div className={viewPlaylist ? 'h-screen overflow-y-hidden quicksand' : 'quicksand'}>
             <div className='initial__content relative w-screen grid grid-cols-12 landing'>
-                <div className='absolute top-0 left-0 ml-6 bsm:ml-8 lg:ml-10 mt-5 bsm:mt-6 lg:mt-8 text-white z-20 font-semibold'>speakthenews</div>
+                <div className='absolute top-0 left-0 ml-6 bsm:ml-8 lg:ml-10 mt-5 bsm:mt-6 lg:mt-8 text-white z-20 firefox__font font-semibold'>speakthenews</div>
                 <img src='/images/home/newspapers.jpg' className='hidden lg:block absolute w-full h-full object-cover'alt='background' />
                 <img src='/images/home/headphones.jpg' className='lg:hidden absolute w-full h-full object-cover'alt='background' />
                 <div className='lg:hidden absolute top-0 left-0 w-full h-full' style={{ background:'rgba(0,0,0,0.75)' }}></div>
@@ -145,7 +152,7 @@ function Home(props) {
                         <p className='m-0 mb-3 sm:mb-4 lg:mb-5 text-lg'>add a news url to your playlist <i className='ml-1 mt-1 fa fa-headphones'></i></p>
                         <div className='lg:mr-24 relative'>
                             <i className='absolute mt-5 ml-4 text-black fa fa-link text-lg'></i>
-                            <input type='text' value={url} onChange={e => { setUrl(e.target.value) }} placeholder='https://link-to-your-article' className='focus:outline-none border border-yellow-900 url__input text-black mb-3 sm:mb-4 lg:mb-5 p-4 pl-12 font-semibold w-full rounded' style={{ borderRadius:'3px', border:'2px solid #eee' }} autoFocus />
+                            <input type='text' value={url} onChange={e => { setUrl(e.target.value) }} placeholder='https://link-to-your-article' className='focus:outline-none border border-yellow-900 url__input text-black mb-3 sm:mb-4 lg:mb-5 p-4 pl-12 firefox__font font-semibold w-full rounded' style={{ borderRadius:'3px', border:'2px solid #eee' }} autoFocus />
                             <button onClick={addNewUrl} className='focus:outline-none add__btn bg-lightBlack p-4 shadow-lg'>add to playlist</button>
                         </div>
                     </div>
@@ -158,7 +165,7 @@ function Home(props) {
                 </div>
             </div>
             <div className='py-24 lg:pt-24 lg:pb-32 px-10 bxs:px-12 bsm:px-16 bsm:px-32 lg:px-64 text-center' style={{ background:'#ebebeb' }}>
-                <p className='m-0 lg:mt-12 text-center font-semibold text-lg bsm:text-xl'>
+                <p className='m-0 lg:mt-12 text-center firefox__font font-semibold text-lg bsm:text-xl'>
                     multitask effectively with the speakthenews app. listen to your favourite articles while carrying out your usual
                     daily tasks. it is the ultimate productivity tool that enables you to always stay up to date with happenings
                     in the world while focusing on something else. if you have ever been frustrated at having to drop whatever you
@@ -173,7 +180,7 @@ function Home(props) {
                 </div>
                 <div className='col-span-12 px-12 bsm:col-start-7 bsm:pl-8 bsm:pr-0 lg:pl-12 bsm:col-span-5 flex flex-col justify-center'>
                     <div className='flex flex-col items-center bsm:items-start'>
-                        <p className='text-center bsm:text-left font-semibold m-0 mb-4 text-xl sm:text-2xl bsm:text-3xl bsm:pl-6 lg:pl-0'>A New Way to Stay Up to Date</p>
+                        <p className='text-center bsm:text-left firefox__font font-semibold m-0 mb-4 text-xl sm:text-2xl bsm:text-3xl bsm:pl-6 lg:pl-0'>A New Way to Stay Up to Date</p>
                         <p className='text-center bsm:text-left m-0 text-lg mb-4 text-gray-800 bsm:pl-6 lg:pl-0 lg:pr-16'>
                             dropping everything because you have an article to read is so old school. listening to them is the
                             new school.
@@ -192,7 +199,7 @@ function Home(props) {
             <div className={props.urls.length > 0 ? 'fixed w-screen transition-all duration-300 ease-in view__playlist__parent active p-4 sm:p-6 flex flex-row justify-end bg-white z-30' :
                 'fixed w-screen transition-all duration-300 ease-in view__playlist__parent p-4 sm:p-6 flex flex-row justify-end bg-white z-30'} style={{ background:'#FBFBFB' }}>
                 <div className='flex flex-row items-center'>
-                    <button onClick={() => { setViewPlaylist(!viewPlaylist) }} className='focus:outline-none bg-black text-white p-3 sm:p-4 lg:mr-5 font-semibold'>view playlist</button>
+                    <button onClick={() => { setViewPlaylist(!viewPlaylist) }} className='focus:outline-none bg-black firefox__font text-white p-3 sm:p-4 lg:mr-5 font-semibold'>view playlist</button>
                 </div>
             </div>
 
@@ -202,16 +209,18 @@ function Home(props) {
 
             <div className={viewPlaylist && props.urls.length > 0 ? 'fixed overflow-y-auto playlist active h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in' :
             'fixed overflow-y-auto playlist h-screen flex flex-col p-8 bg-white z-50 transition-all duration-300 ease-in'} style={{ background:'#FBFBFB' }}>
-                <div className='flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6 mb-8 bsm:mb-8'>
-                    <p className='m-0 mb-3 text-lg font-semibold'>playlist ({props.urls.length})</p>
+                <div className={isFirefox ? 'flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6 mb-5' 
+                : 'flex flex-row justify-between items-center h-5 mt-8 bsm:mt-6 mb-8' }>
+                    <p className='m-0 mb-3 text-lg firefox__font font-semibold'>playlist ({props.urls.length})</p>
                     <img onClick={() => { setViewPlaylist(!viewPlaylist) }} src='/images/home/right-arrow.png' className='cursor-pointer object-cover relative' style={{ top:'-2px' }} />
                 </div>
 
                 <div>
                     {urlsData}
                 </div>
-                <div className='mb-3'>
-                    <button onClick={() => { props.switchTab('player') }} className='focus:outline-none w-full p-5 bg-black text-white font-semibold'>listen to playlist</button>
+                <div>
+                    <button onClick={() => { props.switchTab('player') }} className={isFirefox ? 'focus:outline-none w-full p-5 mb-10 bg-black text-white firefox__font font-semibold' 
+                    : 'focus:outline-none w-full p-5 bg-black text-white firefox__font font-semibold'}>listen to playlist</button>
                 </div>
             </div>
         </div>

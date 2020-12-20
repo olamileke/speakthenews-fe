@@ -12,3 +12,26 @@ ReactDom.render(
 
 // registering the service worker for pwas
 serviceWorker.register();
+
+let wakeLock = null;
+
+const requestWakeLock = async () => {
+    wakeLock =  await navigator.wakeLock.request('screen');
+}
+
+if('wakeLock' in navigator) {
+    try {
+        requestWakeLock();    
+    }
+    catch(error) {
+        console.log(error);
+    }
+}
+
+const handleVisibilityChange = async () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+      await requestWakeLock();
+    }
+};
+  
+document.addEventListener('visibilitychange', handleVisibilityChange);
