@@ -186,14 +186,14 @@ function Home(props) {
                 <div className='col-span-12 px-12 bsm:col-start-7 bsm:pl-8 bsm:pr-0 lg:pl-12 bsm:col-span-5 flex flex-col justify-center'>
                     <div className='flex flex-col items-center bsm:items-start'>
                         <p className='text-center bsm:text-left firefox__font font-semibold m-0 mb-4 text-xl sm:text-2xl bsm:text-3xl bsm:pl-6 lg:pl-0'>A New Way to Stay Up to Date</p>
-                        <p className='text-center bsm:text-left m-0 text-lg mb-4 text-gray-800 bsm:pl-6 lg:pl-0 lg:pr-16'>
+                        <p className='text-center bsm:text-left m-0 text-lg mb-3 text-gray-800 bsm:pl-6 lg:pl-0 lg:pr-16'>
                             dropping everything because you have an article to read is so old school. listening to them is the
-                            new school.
+                            new school <i className='text-sm em em-relieved relative' style={{ top:'-1px', left:'2px' }}></i>
                         </p>
                         <p className='text-center bsm:text-left m-0 text-lg text-gray-800 bsm:pl-6 lg:pl-0 lg:pr-16'>
                             speakthenews takes advantage of the latest speech synthesis technology to deliver a wholesome
-                            news experience. it is powered by the responsive voice library which leverages unique mechanisms
-                            to deliver the news to you.
+                            news experience. it is powered by the responsive voice library which is built on top of the 
+                            speechsynthesis interface of the web speech api.
                         </p>    
                     </div>
                 </div>

@@ -7,8 +7,8 @@ function Footer() {
             <div className='col-span-12 mb-4 bsm:mb-0 bsm:col-start-1 bmd:col-start-2 bsm:col-end-5 flex flex-col z-20'>
                 <p className='m-0 mb-2 bsm:mb-3 text-xl uppercase'>speakthenews</p>
                 <p className='m-0 text-lg'>
-                    text to speech tool for news articles. providing ease by taking advantage of the latest technology.<br />
-                    <div className='hidden lg:inline'>create your playlist today <i class="ml-1 em em-slightly_smiling_face"></i></div>
+                    text to speech tool for news articles. providing ease by taking advantage of the latest technology.
+                    create your news playlist today.
                 </p>
             </div>
             <div className='z-20 col-span-12 mb-4 bsm:mb-0 bsm:col-start-5 bsm:pl-10 bmd:pl-20 bsm:col-end-9 lg:col-start-6 lg:pl-4 flex flex-col'>

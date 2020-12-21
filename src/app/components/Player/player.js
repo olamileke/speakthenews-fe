@@ -27,9 +27,10 @@ function Player(props) {
     useEffect(() => {
         if(window.screen.width > 1024 && props.urls.length > 3) {
             new Glide(".glide", {
-                peek: 50,
-                perView: 2.5,
-                type: "carousel"
+                bound:true,
+                startAt:0,
+                perView: 2.95,
+                type: "slider"
               }).mount();
         }
     }, []);
@@ -55,7 +56,7 @@ function Player(props) {
         .then(response => {
             const article = response.data.data;
             setNowPlayingArticle(article);
-            const content = `Title - ${article.title}. ` + article.content;
+            const content = `${article.title} ` + article.content;
             window.responsiveVoice.speak(content);
             
             if(isChrome()) {
@@ -176,7 +177,7 @@ function Player(props) {
         const markup = urls.map((url, index) => {
             const slicedUrl = url.slice(0, 35) + '...';
 
-            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'firefox__font glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
+            return <div key={index} onClick={() => { setActiveUrl(url) }} className={ url == activeUrl ? 'active__url firefox__font glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center bg-black text-white' :
             'firefox__font glide__slide font-semibold cursor-pointer flex-shrink-0 mr-3 w-3/7 bsm:w-1/3 md:w-1/4 lg:w-1/3 h-32 p-4 flex flex-row justify-center items-center'} >
                 <p className='m-0 break-all'>{slicedUrl}</p>
             </div>
