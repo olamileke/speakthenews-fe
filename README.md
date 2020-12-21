@@ -3,7 +3,7 @@
 ------------
 Text-to-speech tool for a few of my favourite news sites ([nytimes](https://www.nytimes.com "nytimes"), [washington post](https://www.washingtonpost.com "washington post"), [politico](https://www.politico.com "politico"), and [the economist](https://www.economist.com "the economist")). 
 
-Create playlists containing news urls you want to listen to, use controls to move forward and backwards in the narration(controls are only supported in chrome for web).
+Create playlists containing news urls you want to listen to, listen to said urls, use controls to move forward and backwards in the narration(controls are only supported in chrome for web).
 
 The backend is written in flask-restful and is available [here](https://github.com/olamileke/speakthenews-be "here"). 
 
